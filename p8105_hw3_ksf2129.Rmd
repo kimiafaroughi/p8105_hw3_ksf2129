@@ -1,0 +1,6 @@
+---
+title: "p8105_hw3_ksf2129"
+author: "Kimia Faroughi"
+date: "2025-10-08"
+output: github_document
+---
