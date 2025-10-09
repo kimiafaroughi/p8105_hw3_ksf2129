@@ -4,3 +4,15 @@ author: "Kimia Faroughi"
 date: "2025-10-08"
 output: github_document
 ---
+
+## Problem 1
+
+Load the dataset
+
+```{r setup, message = FALSE}
+library(tidyverse)
+library(p8105.datasets)
+data("instacart")
+```
+
+There are `r nrow(instacart)` rows (observations) and `r ncol(instacart)` columns (variables) in the `instacart` dataset. Each row in the dataset is a unique product from an order from instacart. Variable names in this dataset include: `r names(instacart)`. Some variables of note are `product_id` (the product identifier), `user_id` (the customer identifier), `product_name` (name of the product ordered), `aisle` (name of the aisle the product is in), and `department` (name of the department the product is in). For example, for the product `49302` and customer `112108`, the product ordered was `Bulgarian Yogurt`, which was in the `dairy eggs` department in the `yogurt` aisle. 
