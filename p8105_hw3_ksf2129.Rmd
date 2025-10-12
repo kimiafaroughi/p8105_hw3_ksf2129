@@ -101,4 +101,59 @@ instacart |>
   knitr::kable(digits = 2)
 ```
 
+## Problem 2
+
+**Clean and tidy the Zillow datasets**
+
+```{r}
+zip_codes_df =
+  read_csv("zillow_data/Zip Codes.csv") |> 
+  janitor::clean_names() |> 
+  relocate(zip_code, county, neighborhood) #puts zip code, county, and neighborhood at the front
+
+zip_zori_df =
+  read_csv("zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv") |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+    cols = x2015_01_31:x2024_08_31,
+    names_to = "date",
+    values_to = "rent",
+    names_prefix = "x" #deletes prefix string from each name value
+  ) |> #put vars representing each date into its own var with another var corresponding to rent prices
+  separate(
+    date, into = c("year", "month", "day"), sep = "_", convert = TRUE
+  ) |> #separate date into year, month, and day
+  rename(zip_code = region_name, county = county_name) |> 
+  mutate(county = str_remove(county, " County")) |> #deletes suffix string from each value
+  relocate(zip_code, county, month, day, year, rent) #puts zip code, county, month, day, year, and rent at the front
+
+#merge datasets
+zillow_tidy =
+  left_join(zip_zori_df, zip_codes_df, by = c("zip_code", "county")) |> 
+  relocate(zip_code, neighborhood, county, month, day, year, rent) |> 
+  mutate(zip_code = as.character(zip_code)) #convert zip code to character var
+```
+
+`r zillow_tidy |> group_by(zip_code) |> summarize(count = n()) |> filter(count == 116) |> unique() |> nrow()` zip codes are observed 116 times. 
+
+```{r}
+#how many zip codes are observed 116
+zillow_tidy |> 
+  group_by(zip_code) |> 
+  summarize(count = n()) |> 
+  filter(count == 116) |> 
+  unique() |> 
+  nrow()
+
+#how many zip codes are observed < 10 times
+zillow_tidy |> 
+  group_by(zip_code) |> 
+  summarize(count = n()) |> 
+  filter(count < 10) |> 
+  unique() |> 
+  nrow()
+```
+
+
+
 
